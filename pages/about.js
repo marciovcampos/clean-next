@@ -1,12 +1,7 @@
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-
 const About = ({ post }) => {
-  const { t } = useTranslation('common');
-
   return (
     <div>
-      <h1>{t('about')}</h1>
+      <h1>{post.about}</h1>
       <p>{post.about}</p>
     </div>
   );
@@ -15,12 +10,15 @@ const About = ({ post }) => {
 export const getStaticProps = async ({ locale }) => {
   console.log(locale);
 
+  if (locale == undefined) {
+    locale = 'en-my';
+  }
+
   let rawdata = require(`../public/locales/${locale.toLowerCase()}/common.json`);
   let post = JSON.parse(JSON.stringify(rawdata));
 
   return {
     props: {
-      ...(await serverSideTranslations(locale, ['common'])),
       post,
     },
   };
