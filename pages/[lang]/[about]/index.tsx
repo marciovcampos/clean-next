@@ -1,4 +1,5 @@
 import { AppProps } from 'next/dist/next-server/lib/router/router';
+import locales from '../../../public/locales/locales';
 
 type Params = {
   lang: String;
@@ -9,11 +10,12 @@ type Post = {
   about: String;
 };
 
-const About = (post: Post) => {
+const About = (post: any) => {
+  const data = post.post;
   return (
     <div>
-      <h1>{post.about}</h1>
-      <p>{post.about}</p>
+      <h1>{data.about}</h1>
+      <p>{data.about}</p>
     </div>
   );
 };
@@ -31,18 +33,19 @@ export const getStaticPaths = () => {
 
 export const getStaticProps = async ({ params }: AppProps) => {
   console.log('lang: ', params.lang);
-  let lang = params.lang;
+  let lang: string = params.lang;
 
   if (lang == undefined) {
     lang = 'en-my';
   }
 
-  let rawdata = require(`../../../public/locales/${lang.toLowerCase()}/common.json`);
-  let post = JSON.parse(JSON.stringify(rawdata));
+  let post = JSON.parse(JSON.stringify(locales[lang].default));
+
+  console.log('json - ', post);
 
   return {
     props: {
-      post,
+      post: post,
     },
   };
 };
