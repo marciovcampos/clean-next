@@ -1,4 +1,15 @@
-const About = ({ post }) => {
+import { AppProps } from 'next/dist/next-server/lib/router/router';
+
+type Params = {
+  lang: String;
+  about: String;
+};
+
+type Post = {
+  about: String;
+};
+
+const About = (post: Post) => {
   return (
     <div>
       <h1>{post.about}</h1>
@@ -18,7 +29,7 @@ export const getStaticPaths = () => {
   };
 };
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps = async ({ params }: AppProps) => {
   console.log('lang: ', params.lang);
   let lang = params.lang;
 
