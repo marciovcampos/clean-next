@@ -44,26 +44,22 @@ export const getStaticPaths = () => {
   };
 };
 
-export async function getAllTopics() {
-  const context = require.context(
-    '../../../public/locales/en-my/',
-    false,
-    /\.mdx$/
-  );
+export async function getAllTopics(lang: string) {
+  const context = require.context('../../../public/locales', true, /\.mdx$/);
   const posts = [];
 
-  console.log('1 - ', context.keys());
-
   for (const key of context.keys()) {
-    const post = key.slice(2);
-    const { data, content } = matter.read(`public/locales/en-my/${post}`);
+    const topic = key.slice(2);
+    if (topic.startsWith(lang)) {
+      const { data, content } = matter.read(`public/locales/${topic}`);
 
-    posts.push({
-      slug: post.replace('.mdx', ''),
-      title: data.title,
-      order: data.order,
-      body: content,
-    });
+      posts.push({
+        slug: topic.replace('.mdx', ''),
+        title: data.title,
+        order: data.order,
+        body: content,
+      });
+    }
   }
   return posts;
 }
@@ -81,7 +77,7 @@ export const getStaticProps = async ({ params }: AppProps) => {
   const { data, content } = matter.read('public/locales/en-my/topic1.mdx');
   let title: string = data.title;
 
-  let allData = await getAllTopics();
+  let allData = await getAllTopics(lang);
 
   return {
     props: {
