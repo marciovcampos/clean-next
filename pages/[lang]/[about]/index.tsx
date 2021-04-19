@@ -1,21 +1,26 @@
 import { AppProps } from 'next/dist/next-server/lib/router/router';
 import locales from '../../../public/locales/locales';
+import * as matter from 'gray-matter';
 
 type Params = {
   lang: String;
   about: String;
 };
 
-type Post = {
-  about: String;
+type AboutProps = {
+  post: any;
+  body: string;
+  title: string;
 };
 
-const About = (post: any) => {
-  const data = post.post;
+const About = ({ post, body, title }: AboutProps) => {
   return (
     <div>
-      <h1>{data.about}</h1>
-      <p>{data.about}</p>
+      <h1>{post.about}</h1>
+      <p>{post.about}</p>
+
+      <h2>{title}</h2>
+      <div dangerouslySetInnerHTML={{ __html: body }} />
     </div>
   );
 };
@@ -41,11 +46,14 @@ export const getStaticProps = async ({ params }: AppProps) => {
 
   let post = JSON.parse(JSON.stringify(locales[lang].default));
 
-  console.log('json - ', post);
+  const { data, content } = matter.read('public/locales/en-my/topic.mdx');
+  let title: string = data.title;
 
   return {
     props: {
       post: post,
+      body: content,
+      title,
     },
   };
 };
