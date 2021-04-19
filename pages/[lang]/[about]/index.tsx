@@ -5,24 +5,37 @@ import * as matter from 'gray-matter';
 type AboutProps = {
   post: any;
   topics: Topic[];
+  questions: Question[];
 };
 
 type Topic = {
   slug: any;
-  title: {
-    [key: string]: any;
-  };
+  title: string;
   body: string;
   order: number;
 };
 
-const About = ({ post, topics }: AboutProps) => {
+type Question = {
+  slug: any;
+  title: string;
+  body: string;
+  order: number;
+};
+
+const About = ({ post, topics, questions }: AboutProps) => {
   return (
     <div>
       <h1>{post.about}</h1>
       <p>{post.about}</p>
 
       {topics.map((data) => (
+        <>
+          <h1>{data.title}</h1>
+          <div dangerouslySetInnerHTML={{ __html: data.body }} />
+        </>
+      ))}
+
+      {questions.map((data) => (
         <>
           <h1>{data.title}</h1>
           <div dangerouslySetInnerHTML={{ __html: data.body }} />
@@ -73,11 +86,13 @@ export const getStaticProps = async ({ params }: AppProps) => {
   let post = JSON.parse(JSON.stringify(locales[lang].default));
 
   let topics = await getAllFiles(lang, 'topics');
+  let questions = await getAllFiles(lang, 'faq');
 
   return {
     props: {
-      post: post,
-      topics: topics,
+      post,
+      topics,
+      questions,
     },
   };
 };
