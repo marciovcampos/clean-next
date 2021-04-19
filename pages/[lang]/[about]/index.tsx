@@ -43,15 +43,14 @@ export const getStaticPaths = () => {
   };
 };
 
-export async function getAllTopics(lang: string) {
+export async function getAllFiles(lang: string, folder: string) {
   const context = require.context('../../../public/locales', true, /\.mdx$/);
   const topics = [];
 
   for (const key of context.keys()) {
     const topic = key.slice(2);
-    if (topic.startsWith(lang)) {
+    if (topic.startsWith(`${lang}/${folder}`)) {
       const { data, content } = matter.read(`public/locales/${topic}`);
-
       topics.push({
         slug: topic.replace('.mdx', ''),
         title: data.title,
@@ -73,7 +72,7 @@ export const getStaticProps = async ({ params }: AppProps) => {
 
   let post = JSON.parse(JSON.stringify(locales[lang].default));
 
-  let topics = await getAllTopics(lang);
+  let topics = await getAllFiles(lang, 'topics');
 
   return {
     props: {
