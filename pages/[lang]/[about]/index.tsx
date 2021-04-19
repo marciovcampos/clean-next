@@ -4,26 +4,25 @@ import * as matter from 'gray-matter';
 
 type AboutProps = {
   post: any;
-  body: string;
-  title: string;
-  allData: AllData[];
+  topics: Topic[];
 };
 
-type AllData = {
+type Topic = {
   slug: any;
   title: {
     [key: string]: any;
   };
   body: string;
+  order: number;
 };
 
-const About = ({ post, body, title, allData }: AboutProps) => {
+const About = ({ post, topics }: AboutProps) => {
   return (
     <div>
       <h1>{post.about}</h1>
       <p>{post.about}</p>
 
-      {allData.map((data) => (
+      {topics.map((data) => (
         <>
           <h1>{data.title}</h1>
           <div dangerouslySetInnerHTML={{ __html: data.body }} />
@@ -46,14 +45,14 @@ export const getStaticPaths = () => {
 
 export async function getAllTopics(lang: string) {
   const context = require.context('../../../public/locales', true, /\.mdx$/);
-  const posts = [];
+  const topics = [];
 
   for (const key of context.keys()) {
     const topic = key.slice(2);
     if (topic.startsWith(lang)) {
       const { data, content } = matter.read(`public/locales/${topic}`);
 
-      posts.push({
+      topics.push({
         slug: topic.replace('.mdx', ''),
         title: data.title,
         order: data.order,
@@ -61,7 +60,7 @@ export async function getAllTopics(lang: string) {
       });
     }
   }
-  return posts;
+  return topics;
 }
 
 export const getStaticProps = async ({ params }: AppProps) => {
@@ -74,17 +73,12 @@ export const getStaticProps = async ({ params }: AppProps) => {
 
   let post = JSON.parse(JSON.stringify(locales[lang].default));
 
-  const { data, content } = matter.read('public/locales/en-my/topic1.mdx');
-  let title: string = data.title;
-
-  let allData = await getAllTopics(lang);
+  let topics = await getAllTopics(lang);
 
   return {
     props: {
       post: post,
-      body: content,
-      title,
-      allData,
+      topics: topics,
     },
   };
 };
