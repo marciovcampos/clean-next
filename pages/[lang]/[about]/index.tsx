@@ -1,6 +1,7 @@
 import { AppProps } from 'next/dist/next-server/lib/router/router';
 import locales from '../../../public/locales/locales';
 import * as matter from 'gray-matter';
+import Link from 'next/Link';
 
 type AboutProps = {
   post: any;
@@ -24,24 +25,43 @@ type Question = {
 
 const About = ({ post, topics, questions }: AboutProps) => {
   return (
-    <div>
-      <h1>{post.about}</h1>
-      <p>{post.about}</p>
+    <>
+      <div>
+        <li>
+          <Link href='/en-my/about'>
+            <a>English</a>
+          </Link>
+        </li>
+        <li>
+          <Link href='/ms-my/mengenai'>
+            <a>Malay</a>
+          </Link>
+        </li>
+        <li>
+          <Link href='/zh-my/guanyu'>
+            <a>Chinese</a>
+          </Link>
+        </li>
+      </div>
+      <div>
+        <h1>{post.about}</h1>
+        <p>{post.about}</p>
 
-      {topics.map((data) => (
-        <>
-          <h1>{data.title}</h1>
-          <div dangerouslySetInnerHTML={{ __html: data.body }} />
-        </>
-      ))}
+        {topics.map((data) => (
+          <>
+            <h1>{data.title}</h1>
+            <div dangerouslySetInnerHTML={{ __html: data.body }} />
+          </>
+        ))}
 
-      {questions.map((data) => (
-        <>
-          <h1>{data.title}</h1>
-          <div dangerouslySetInnerHTML={{ __html: data.body }} />
-        </>
-      ))}
-    </div>
+        {questions.map((data) => (
+          <>
+            <h1>{data.title}</h1>
+            <div dangerouslySetInnerHTML={{ __html: data.body }} />
+          </>
+        ))}
+      </div>
+    </>
   );
 };
 
