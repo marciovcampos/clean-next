@@ -1,4 +1,4 @@
-import Link from 'next/Link';
+import Link from 'next/link';
 import { AppProps } from 'next/dist/next-server/lib/router/router';
 import locales from '../../../public/locales/locales';
 import * as matter from 'gray-matter';
