@@ -1,7 +1,8 @@
+import Link from 'next/Link';
 import { AppProps } from 'next/dist/next-server/lib/router/router';
 import locales from '../../../public/locales/locales';
 import * as matter from 'gray-matter';
-import Link from 'next/Link';
+import styles from './styles.module.css';
 
 type AboutProps = {
   post: any;
@@ -49,14 +50,14 @@ const About = ({ post, topics, questions }: AboutProps) => {
 
         {topics.map((data) => (
           <>
-            <h1>{data.title}</h1>
+            <h1 className={styles.red}>{data.title}</h1>
             <div dangerouslySetInnerHTML={{ __html: data.body }} />
           </>
         ))}
 
         {questions.map((data) => (
           <>
-            <h1>{data.title}</h1>
+            <h1 className={styles.blue}>{data.title}</h1>
             <div dangerouslySetInnerHTML={{ __html: data.body }} />
           </>
         ))}
